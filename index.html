@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Trip Scheduler</title>
+</head>
+<body>
+    <header>
+        <h1>Trip Schedule</h1>
+        <span id="tripDate"></span>
+    </header>
+    <div id="tripsContainer">
+        <!-- Trip details will be inserted here -->
+    </div>
+
+    <!-- Modal Dialog -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Trip Details</h2>
+            <form id="editForm">
+                <label for="editTime">Time:</label>
+                <input type="text" id="editTime" name="time" required><br><br>
+                <label for="editLocation">Location:</label>
+                <input type="text" id="editLocation" name="location" required><br><br>
+                <label for="editOfficer1">Officer 1:</label>
+                <input type="text" id="editOfficer1" name="officer1" required><br><br>
+                <label for="editOfficer2">Officer 2:</label>
+                <input type="text" id="editOfficer2" name="officer2" required><br><br>
+                <label for="editVehicle">Vehicle:</label>
+                <input type="text" id="editVehicle" name="vehicle" required><br><br>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tripsContainer = document.getElementById('tripsContainer');
+            const tripDetails = JSON.parse(localStorage.getItem('tripDetails')) || [];
+            const tripDate = localStorage.getItem('tripDate') || '';
+            const editModal = document.getElementById('editModal');
+            const closeModal = document.querySelector('.close');
+            const editForm = document.getElementById('editForm');
+            const tripDateElement = document.getElementById('tripDate');
+            let currentIndex;
+
+            function renderTrips() {
+                tripsContainer.innerHTML = '';
+                tripDetails.forEach((trip, index) => {
+                    const tripDiv = document.createElement('div');
+                    tripDiv.classList.add('trip');
+                    tripDiv.innerHTML = `
+                        <h2>${trip.location}</h2>
+                        <div class="trip-detail">
+                            <div class="label">Time:</div>
+                            <div class="data">${trip.time}</div>
+                        </div>
+                        <div class="trip-detail">
+                            <div class="label">Location:</div>
+                            <div class="data">${trip.location}</div>
+                        </div>
+                        <div class="trip-detail">
+                            <div class="label">Officer 1:</div>
+                            <div class="data">${trip.officer1}</div>
+                        </div>
+                        <div class="trip-detail">
+                            <div class="label">Officer 2:</div>
+                            <div class="data">${trip.officer2}</div>
+                        </div>
+                        <div class="trip-detail">
+                            <div class="label">Vehicle:</div>
+                            <div class="data">${trip.vehicle}</div>
+                        </div>
+                        <button class="edit-button" data-index="${index}">Edit</button>
+                    `;
+                    tripsContainer.appendChild(tripDiv);
+                });
+
+                tripDateElement.textContent = `Date: ${tripDate}`;
+            }
+
+            renderTrips();
+
+            tripsContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('edit-button')) {
+                    currentIndex = event.target.getAttribute('data-index');
+                    const trip = tripDetails[currentIndex];
+                    document.getElementById('editTime').value = trip.time;
+                    document.getElementById('editLocation').value = trip.location;
+                    document.getElementById('editOfficer1').value = trip.officer1;
+                    document.getElementById('editOfficer2').value = trip.officer2;
+                    document.getElementById('editVehicle').value = trip.vehicle;
+                    editModal.style.display = 'block';
+                }
+            });
+
+            closeModal.addEventListener('click', function() {
+                editModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target == editModal) {
+                    editModal.style.display = 'none';
+                }
+            });
+
+            editForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                tripDetails[currentIndex] = {
+                    time: document.getElementById('editTime').value,
+                    location: document.getElementById('editLocation').value,
+                    officer1: document.getElementById('editOfficer1').value,
+                    officer2: document.getElementById('editOfficer2').value,
+                    vehicle: document.getElementById('editVehicle').value
+                };
+                localStorage.setItem('tripDetails', JSON.stringify(tripDetails));
+                renderTrips();
+                editModal.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

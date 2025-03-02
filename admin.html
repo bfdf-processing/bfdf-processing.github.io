@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin-style.css">
+    <title>Admin - Trip Scheduler</title>
+</head>
+<body>
+    <header>
+        <h1>Admin - Enter Trip Details</h1>
+    </header>
+    <form id="tripForm">
+        <label for="tripDate">Date:</label>
+        <input type="date" id="tripDate" required><br><br>
+        <div id="tripsContainer">
+            <div class="trip">
+                <label for="time">Time:</label>
+                <input type="text" class="time" required><br><br>
+                <label for="location">Location:</label>
+                <input type="text" class="location" required><br><br>
+                <label for="officer1">Officer 1:</label>
+                <input type="text" class="officer1" required><br><br>
+                <label for="officer2">Officer 2:</label>
+                <input type="text" class="officer2" required><br><br>
+                <label for="vehicle">Vehicle:</label>
+                <input type="text" class="vehicle" required><br><br>
+            </div>
+        </div>
+        <button type="button" id="addTrip">Add Another Trip</button><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('addTrip').addEventListener('click', function() {
+            const tripContainer = document.createElement('div');
+            tripContainer.classList.add('trip');
+            tripContainer.innerHTML = `
+                <label for="time">Time:</label>
+                <input type="text" class="time" required><br><br>
+                <label for="location">Location:</label>
+                <input type="text" class="location" required><br><br>
+                <label for="officer1">Officer 1:</label>
+                <input type="text" class="officer1" required><br><br>
+                <label for="officer2">Officer 2:</label>
+                <input type="text" class="officer2" required><br><br>
+                <label for="vehicle">Vehicle:</label>
+                <input type="text" class="vehicle" required><br><br>
+            `;
+            document.getElementById('tripsContainer').appendChild(tripContainer);
+        });
+
+        document.getElementById('tripForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const tripDate = document.getElementById('tripDate').value;
+            const trips = [];
+            document.querySelectorAll('.trip').forEach(trip => {
+                const tripDetails = {
+                    time: trip.querySelector('.time').value,
+                    location: trip.querySelector('.location').value,
+                    officer1: trip.querySelector('.officer1').value,
+                    officer2: trip.querySelector('.officer2').value,
+                    vehicle: trip.querySelector('.vehicle').value
+                };
+                trips.push(tripDetails);
+            });
+            localStorage.setItem('tripDate', tripDate);
+            localStorage.setItem('tripDetails', JSON.stringify(trips));
+            alert('Trip details saved!');
+        });
+    </script>
+</body>
+</html>
