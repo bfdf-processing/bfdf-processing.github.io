@@ -118,3 +118,48 @@ header {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    #tripsContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .trip h2 {
+        font-size: 24px;
+    }
+
+    .trip-detail .label {
+        font-size: 20px;
+    }
+
+    .trip-detail .data {
+        font-size: 18px;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    #tripsContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .trip h2 {
+        font-size: 20px;
+    }
+
+    .trip-detail .label {
+        font-size: 18px;
+    }
+
+    .trip-detail .data {
+        font-size: 16px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}

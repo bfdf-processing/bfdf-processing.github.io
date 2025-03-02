@@ -20,7 +20,12 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Trip Details</h2>
-            <form id="editForm">
+            <form id="passwordForm">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                <button type="submit">Submit</button>
+            </form>
+            <form id="editForm" style="display:none;">
                 <label for="editTime">Time:</label>
                 <input type="text" id="editTime" name="time" required><br><br>
                 <label for="editLocation">Location:</label>
@@ -43,6 +48,7 @@
             const tripDate = localStorage.getItem('tripDate') || '';
             const editModal = document.getElementById('editModal');
             const closeModal = document.querySelector('.close');
+            const passwordForm = document.getElementById('passwordForm');
             const editForm = document.getElementById('editForm');
             const tripDateElement = document.getElementById('tripDate');
             let currentIndex;
@@ -87,23 +93,38 @@
             tripsContainer.addEventListener('click', function(event) {
                 if (event.target.classList.contains('edit-button')) {
                     currentIndex = event.target.getAttribute('data-index');
-                    const trip = tripDetails[currentIndex];
-                    document.getElementById('editTime').value = trip.time;
-                    document.getElementById('editLocation').value = trip.location;
-                    document.getElementById('editOfficer1').value = trip.officer1;
-                    document.getElementById('editOfficer2').value = trip.officer2;
-                    document.getElementById('editVehicle').value = trip.vehicle;
                     editModal.style.display = 'block';
                 }
             });
 
             closeModal.addEventListener('click', function() {
                 editModal.style.display = 'none';
+                passwordForm.style.display = 'block';
+                editForm.style.display = 'none';
             });
 
             window.addEventListener('click', function(event) {
                 if (event.target == editModal) {
                     editModal.style.display = 'none';
+                    passwordForm.style.display = 'block';
+                    editForm.style.display = 'none';
+                }
+            });
+
+            passwordForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const password = document.getElementById('password').value;
+                if (password === 'processing4250!') { // Edit button password
+                    passwordForm.style.display = 'none';
+                    editForm.style.display = 'block';
+                    const trip = tripDetails[currentIndex];
+                    document.getElementById('editTime').value = trip.time;
+                    document.getElementById('editLocation').value = trip.location;
+                    document.getElementById('editOfficer1').value = trip.officer1;
+                    document.getElementById('editOfficer2').value = trip.officer2;
+                    document.getElementById('editVehicle').value = trip.vehicle;
+                } else {
+                    alert('Incorrect password');
                 }
             });
 
@@ -119,6 +140,8 @@
                 localStorage.setItem('tripDetails', JSON.stringify(tripDetails));
                 renderTrips();
                 editModal.style.display = 'none';
+                passwordForm.style.display = 'block';
+                editForm.style.display = 'none';
             });
         });
     </script>
