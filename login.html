@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <script>
+        function login() {
+            const predefinedPassword = 'processing4250!'; // Predefined password
+            const password = document.getElementById('password').value;
+            if (password === predefinedPassword) {
+                sessionStorage.setItem('loggedIn', 'true'); // Set login state
+                window.location.href = 'admin.html'; // Redirect to admin page
+            } else {
+                alert('Incorrect password. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
