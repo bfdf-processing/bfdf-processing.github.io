@@ -63,6 +63,7 @@
             const trips = [];
             document.querySelectorAll('.trip').forEach(trip => {
                 const tripDetails = {
+                    date: tripDate,
                     time: trip.querySelector('.time').value,
                     location: trip.querySelector('.location').value,
                     officer1: trip.querySelector('.officer1').value,
@@ -71,8 +72,24 @@
                 };
                 trips.push(tripDetails);
             });
-            localStorage.setItem('tripDate', tripDate);
-            localStorage.setItem('tripDetails', JSON.stringify(trips));
+
+            trips.forEach(trip => {
+                fetch('https://script.google.com/macros/s/AKfycbwcUDHCG3QMlCvfLy9F4qFGF1Nm4sr2xbOeWvyBXCd6C9PiNDnDn0ViafcpEs7Oo04/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(trip),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+
             alert('Trip details saved!');
         });
     </script>

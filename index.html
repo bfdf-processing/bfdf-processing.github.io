@@ -44,14 +44,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const tripsContainer = document.getElementById('tripsContainer');
-            const tripDetails = JSON.parse(localStorage.getItem('tripDetails')) || [];
-            const tripDate = localStorage.getItem('tripDate') || '';
+            const tripDateElement = document.getElementById('tripDate');
             const editModal = document.getElementById('editModal');
             const closeModal = document.querySelector('.close');
             const passwordForm = document.getElementById('passwordForm');
             const editForm = document.getElementById('editForm');
-            const tripDateElement = document.getElementById('tripDate');
+            let tripDetails = [];
             let currentIndex;
+
+            function fetchTrips() {
+                fetch('https://script.google.com/macros/s/AKfycby_XHVZElzSGe2VNnsRt0prvn5zP_YJPntrWuHwl-VHjOV8OjUqHgO4OMJE4oyoPT4/exec')
+                    .then(response => response.json())
+                    .then(data => {
+                        tripDetails = data;
+                        renderTrips();
+                    })
+                    .catch(error => console.error('Error fetching trip data:', error));
+            }
 
             function renderTrips() {
                 tripsContainer.innerHTML = '';
@@ -85,10 +94,12 @@
                     tripsContainer.appendChild(tripDiv);
                 });
 
-                tripDateElement.textContent = `Date: ${tripDate}`;
+                if (tripDetails.length > 0) {
+                    tripDateElement.textContent = `Date: ${tripDetails[0].date}`;
+                }
             }
 
-            renderTrips();
+            fetchTrips();
 
             tripsContainer.addEventListener('click', function(event) {
                 if (event.target.classList.contains('edit-button')) {
